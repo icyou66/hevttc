@@ -13,6 +13,9 @@
 ```bash
 pip install -r requirements.txt
 ```
+#### 依赖说明
+- **本代码仅使用了beautifulsoup和requests两个拓展模块，其它均为内置模块，如果你拥有这两个模块可直接运行**
+- **尽量使用最新版本的python**
 
 ## 可执行文件运行
 > 仅支持windows平台。
