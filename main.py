@@ -3,7 +3,6 @@
 import json
 import time
 import tkinter
-import traceback
 from tkinter import *
 from tkinter import ttk
 from classqk import User
@@ -42,7 +41,7 @@ class Tkinter:
         window_width = self.root.winfo_screenwidth()
 
         # 最小宽度
-        width, height = list([720, 650])
+        width, height = list([755, 650])
         self.root.minsize(width, height)
 
         # 设置窗口大小
@@ -416,7 +415,7 @@ class Tkinter:
         :return:
         """
         if not course:
-            if self.course_data_List.size() < 3:
+            if self.course_data_List.size() < 1:
                 self.end("请先获取课程！", "red")
             item = self.course_data_List.curselection()
             if not item:
