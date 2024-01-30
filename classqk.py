@@ -17,9 +17,9 @@ class User:
             "Accept-Language": "zh-CN,zh;q=0.9",
             "Connection": "keep-alive",
             "Content-Type": "application/x-www-form-urlencoded",
-            "Host": "hevttc.jw.chaoxing.com",
-            "Origin": "https://hevttc.jw.chaoxing.com",
-            "Referer": "https://hevttc.jw.chaoxing.com/admin/login",
+            "Host": "jwxt.hevttc.edu.cn",
+            "Origin": "https://jwxt.hevttc.edu.cn",
+            "Referer": "https://jwxt.hevttc.edu.cn/admin/login",
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
         }
 
@@ -31,7 +31,7 @@ class User:
         if not self.account or not self.password:
             return False, "账号密码不能为空！"
 
-        url = 'https://hevttc.jw.chaoxing.com/admin/login'
+        url = 'https://jwxt.hevttc.edu.cn/admin/login'
         data = dict(username=self.account, password=self.password)
         result = self.session.post(url, data=data, headers=self.headers).text
         if "账号登录" in result:
@@ -43,7 +43,7 @@ class User:
         """
         退出登录
         """
-        self.session.post("https://hevttc.jw.chaoxing.com/admin/logout", headers=self.headers)
+        self.session.post("https://jwxt.hevttc.edu.cn/admin/logout", headers=self.headers)
         return True
 
     def initial(self):
@@ -52,11 +52,11 @@ class User:
         2023年8月10日的抢课pcid为571958c87a204848b1f95c82160dbc4b
         :return (name, number): 返回姓名和学号
         """
-        self.headers['Referer'] = "https://hevttc.jw.chaoxing.com/admin"
+        self.headers['Referer'] = "https://jwxt.hevttc.edu.cn/admin"
         self.headers.pop("Content-Type")
-        result = self.session.get("https://hevttc.jw.chaoxing.com/admin/xsd/xk", headers=self.headers)
+        result = self.session.get("https://jwxt.hevttc.edu.cn/admin/xsd/xk", headers=self.headers)
         if "您的密码是初始密码，请修改密码" in result.text:
-            raise Exception("您的密码是初始密码，请登录网站：\nhttps://hevttc.jw.chaoxing.com/ \n修改密码后再来操作！")
+            raise Exception("您的密码是初始密码，请登录网站：\nhttps://jwxt.hevttc.edu.cn/ \n修改密码后再来操作！")
         soup = BeautifulSoup(result.text, "html.parser")
         self.pcid = soup.find('a', attrs={"data-toggle": "tab"})['id']
         self.pcid = self.pcid.replace("navItem_", "")
@@ -100,11 +100,11 @@ class User:
         data = dict(pcid=self.pcid)
         if select == "美育课":
             data['kcgs'] = "美育教育类"
-        self.headers['Referer'] = "https://hevttc.jw.chaoxing.com/admin/xsd/xk"
+        self.headers['Referer'] = "https://jwxt.hevttc.edu.cn/admin/xsd/xk"
         self.headers['Content-Type'] = "application/x-www-form-urlencoded; charset=UTF-8"
-        self.course_list = self.session.post("https://hevttc.jw.chaoxing.com/admin/xsd/xk/listjxb", data=data, headers=self.headers).json()
+        self.course_list = self.session.post("https://jwxt.hevttc.edu.cn/admin/xsd/xk/listjxb", data=data, headers=self.headers).json()
         if not self.course_list:
-            raise Exception("疑似登录失效，请重新登录！")
+            raise Exception("没有查到可选课程！")
 
     def classify(self):
         """
@@ -140,9 +140,9 @@ class User:
         :return: 返回结果，如果选课成功，则返回：{ret: 0, msg: "操作成功"}
         """
         data = dict(jxbid=course['id'], pcid=self.pcid)
-        self.headers['Referer'] = "https://hevttc.jw.chaoxing.com/admin/xsd/xk"
+        self.headers['Referer'] = "https://jwxt.hevttc.edu.cn/admin/xsd/xk"
         self.headers['Content-Type'] = "application/x-www-form-urlencoded; charset=UTF-8"
-        return self.session.post("https://hevttc.jw.chaoxing.com/admin/xsd/xk/ggxxk/xk", data=data, headers=self.headers).json()
+        return self.session.post("https://jwxt.hevttc.edu.cn/admin/xsd/xk/ggxxk/xk", data=data, headers=self.headers).json()
 
     def drop(self, course):
         """
@@ -151,6 +151,6 @@ class User:
         :return: 返回结果，如果退课成功，则返回：{ret: 0, msg: "操作成功"}
         """
         data = dict(jxbid=course['id'], pcid=self.pcid)
-        self.headers['Referer'] = "https://hevttc.jw.chaoxing.com/admin/xsd/xk"
+        self.headers['Referer'] = "https://jwxt.hevttc.edu.cn/admin/xsd/xk"
         self.headers['Content-Type'] = "application/x-www-form-urlencoded; charset=UTF-8"
-        return self.session.post("https://hevttc.jw.chaoxing.com/admin/xsd/xk/ggxxk/tk", data=data, headers=self.headers).json()
+        return self.session.post("https://jwxt.hevttc.edu.cn/admin/xsd/xk/ggxxk/tk", data=data, headers=self.headers).json()
